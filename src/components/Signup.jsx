@@ -8,6 +8,7 @@ const Signup = () => {
   const [userConfirmPassword, setUserConfirmPassword] = useState("");
   const [open, setOpen] = useState(false);
   const [validEmail, setValidEmail] = useState(true);
+  const [validPasswords, setValidPasswords] = useState(true);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -27,6 +28,13 @@ const Signup = () => {
     const re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     setValidEmail(re.test(String(email).toLowerCase()));
+  };
+
+  const validatePasswords = (password) => {
+    setValidPasswords(false)
+    if (userPassword === password) {
+      setValidPasswords(true);
+    }
   };
 
   return (
@@ -54,6 +62,7 @@ const Signup = () => {
         />
         <Form.Field
           data-cy="password-input"
+          type='password'
           control={Input}
           label="Password"
           value={userPassword}
@@ -61,10 +70,19 @@ const Signup = () => {
         />
         <Form.Field
           data-cy="confirm-password-input"
+          type='password'
           control={Input}
           label="Confirm Password"
           value={userConfirmPassword}
-          onChange={(e) => setUserConfirmPassword(e.target.value)}
+          onChange={(e) => {
+            setUserConfirmPassword(e.target.value);
+            validatePasswords(e.target.value);
+          }}
+          error={
+            validPasswords
+              ? null
+              : { content: "Passwords must match", pointing: "below" }
+          }
         />
         <Form.Field
           data-cy="btn-signup"
